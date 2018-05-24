@@ -36,13 +36,20 @@ void GLWidget::paintGL()
 	glColor3f(1, 0, 0);
 	glutSolidSphere(1, 20, 20);
 
-	QPainter p(this);
-	QImage img("D:/Google Drive/Sync/Lab meeting slides/bird.gif");
-	p.drawImage(rect(), img);
-	p.setPen(Qt::red);
-	p.setBrush(Qt::red);
-	for (std::vector<Point>::iterator it = pointList.begin(); it != pointList.end(); it++) {
-		p.drawEllipse(it->x, it->y, 5, 5);
+	if (mode == 0) {
+		QPainter p(this);
+		QImage img("D:/Google Drive/Sync/Lab meeting slides/bird.gif");
+		p.begin(this);
+		p.drawImage(rect(), img);
+		p.setPen(Qt::red);
+		p.setBrush(Qt::red);
+		for (std::vector<Point>::iterator it = pointList.begin(); it != pointList.end(); it++) {
+			p.drawEllipse(it->x, it->y, 5, 5);
+		}
+		p.end();
+	}
+	else if (mode == 1) {
+		;
 	}
 }
 
@@ -75,5 +82,17 @@ void GLWidget::mousePressEvent(QMouseEvent* event)
 
 void GLWidget::resetBtnClicked() {
 	pointList.clear();
+	update();
+}
+
+void GLWidget::modeBtnClicked() {
+	switch (mode) {
+	case 0:
+		mode = 1;
+		break;
+	case 1:
+		mode = 0;
+		break;
+	}
 	update();
 }

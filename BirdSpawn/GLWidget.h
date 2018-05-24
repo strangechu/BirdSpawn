@@ -38,5 +38,6 @@ public:
 
 private slots:
 	void resetBtnClicked();
+	void modeBtnClicked();
 };
 
