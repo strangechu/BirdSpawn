@@ -26,18 +26,10 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	gluLookAt(0, 0, 0, 0, 0, -5, 0, 1, 0);
-
-	glTranslatef(0.0, 0.0, -10.0);
-	glColor3f(1, 0, 0);
-	glutSolidSphere(1, 20, 20);
+	QPainter p(this);
 
 	if (mode == 0) {
-		QPainter p(this);
 		QImage img("D:/Google Drive/Sync/Lab meeting slides/bird.gif");
 		p.begin(this);
 		p.drawImage(rect(), img);
@@ -49,7 +41,29 @@ void GLWidget::paintGL()
 		p.end();
 	}
 	else if (mode == 1) {
-		;
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_LIGHT0);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_COLOR_MATERIAL);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		gluLookAt(0, 0, 0, 0, 0, -5, 0, 1, 0);
+
+		glLoadIdentity();
+		glTranslatef(70.0, 10.0, -300.0);
+		glColor3f(1, 0, 0);
+		glutSolidSphere(10, 20, 20);
+		glLoadIdentity();
+		glTranslatef(-10.0, 50.0, -300.0);
+		glColor3f(1, 0, 0);
+		glutSolidSphere(10, 20, 20);
+		glLoadIdentity();
+		glTranslatef(60.0, 60.0, -300.0);
+		glColor3f(1, 0, 0);
+		glutSolidSphere(10, 20, 20);
 	}
 }
 
