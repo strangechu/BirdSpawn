@@ -4,6 +4,7 @@
 #include "QLabel"
 #include "QPainter"
 #include "QColor"
+#include "QFileDialog"
 #include <math.h>
 
 GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent)
@@ -29,18 +30,22 @@ void GLWidget::paintGL()
 
 	QPainter p(this);
 
-	if (mode == 0) {
-		QImage img("D:/Google Drive/Sync/Lab meeting slides/bird.gif");
+	if (mode == 0) { // Paint mode
+		QImage img(fileName);
 		p.begin(this);
-		p.drawImage(rect(), img);
+		// Draw image
+		if (!img.isNull()) {
+			p.drawImage(rect(), img);
+		}
 		p.setPen(Qt::red);
 		p.setBrush(Qt::red);
+		// draw click point
 		for (std::vector<Point>::iterator it = pointList.begin(); it != pointList.end(); it++) {
 			p.drawEllipse(it->x, it->y, 5, 5);
 		}
 		p.end();
 	}
-	else if (mode == 1) {
+	else if (mode == 1) { // 3D view mode
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_LIGHT0);
 		glEnable(GL_LIGHTING);
@@ -108,5 +113,10 @@ void GLWidget::modeBtnClicked() {
 		mode = 0;
 		break;
 	}
+	update();
+}
+
+void GLWidget::loadBtnClicked() {
+	fileName = QFileDialog::getOpenFileName(this, tr("Open Image"), fileName, tr("Image Files (*.png *.jpg *.gif)"));
 	update();
 }

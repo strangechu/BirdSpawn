@@ -34,10 +34,13 @@ public:
 
 	int mode = 0;
 
+	QString fileName;
+
 	std::vector<Point> pointList;
 
 private slots:
 	void resetBtnClicked();
 	void modeBtnClicked();
+	void loadBtnClicked();
 };
 

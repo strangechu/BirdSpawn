@@ -27,8 +27,8 @@
    <widget class="QPushButton" name="quitButton">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>230</y>
+      <x>400</x>
+      <y>260</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -53,10 +53,10 @@
    <widget class="QPushButton" name="resetBtn">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>100</y>
-      <width>75</width>
-      <height>23</height>
+      <x>370</x>
+      <y>110</y>
+      <width>112</width>
+      <height>34</height>
      </rect>
     </property>
     <property name="text">
@@ -66,14 +66,27 @@
    <widget class="QPushButton" name="modeBtn">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>140</y>
-      <width>75</width>
-      <height>23</height>
+      <x>370</x>
+      <y>150</y>
+      <width>112</width>
+      <height>34</height>
      </rect>
     </property>
     <property name="text">
      <string>Mode</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="loadBtn">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>70</y>
+      <width>112</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Load</string>
     </property>
    </widget>
   </widget>
@@ -83,7 +96,7 @@
      <x>0</x>
      <y>0</y>
      <width>525</width>
-     <height>21</height>
+     <height>29</height>
     </rect>
    </property>
   </widget>
@@ -106,6 +119,7 @@
    <slots>
     <slot>resetBtnClicked()</slot>
     <slot>modeBtnClicked()</slot>
+    <slot>loadBtnClicked()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -120,8 +134,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>432</x>
-     <y>285</y>
+     <x>442</x>
+     <y>327</y>
     </hint>
     <hint type="destinationlabel">
      <x>524</x>
@@ -136,8 +150,8 @@
    <slot>resetBtnClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>432</x>
-     <y>145</y>
+     <x>412</x>
+     <y>188</y>
     </hint>
     <hint type="destinationlabel">
      <x>326</x>
@@ -152,12 +166,28 @@
    <slot>modeBtnClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>390</x>
-     <y>183</y>
+     <x>370</x>
+     <y>228</y>
     </hint>
     <hint type="destinationlabel">
      <x>329</x>
      <y>185</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>loadBtn</sender>
+   <signal>released()</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>loadBtnClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>370</x>
+     <y>130</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>330</x>
+     <y>132</y>
     </hint>
    </hints>
   </connection>
