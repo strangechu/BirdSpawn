@@ -40,10 +40,10 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>40</x>
       <y>300</y>
-      <width>131</width>
-      <height>16</height>
+      <width>461</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -96,7 +96,7 @@
      <x>0</x>
      <y>0</y>
      <width>525</width>
-     <height>29</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -135,7 +135,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>442</x>
-     <y>327</y>
+     <y>315</y>
     </hint>
     <hint type="destinationlabel">
      <x>524</x>
@@ -151,7 +151,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>412</x>
-     <y>188</y>
+     <y>176</y>
     </hint>
     <hint type="destinationlabel">
      <x>326</x>
@@ -167,7 +167,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>370</x>
-     <y>228</y>
+     <y>216</y>
     </hint>
     <hint type="destinationlabel">
      <x>329</x>

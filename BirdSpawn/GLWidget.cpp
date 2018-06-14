@@ -41,10 +41,28 @@ void GLWidget::paintGL()
 		}
 		p.setPen(Qt::red);
 		p.setBrush(Qt::red);
-		// draw click point
-		for (auto it = pointList.begin(); it != pointList.end(); it++) {
-			p.drawEllipse(it->x, it->y, 5, 5);
+		// Draw points
+		if (draw_mode == 0) {
+			for (auto it = pointList.begin(); it != pointList.end(); it++) {
+				p.drawEllipse(it->x, it->y, 5, 5);
+			}
 		}
+
+		// Draw rects
+		if (draw_mode == 1) {
+			p.setBrush(Qt::NoBrush);
+			p.setPen(Qt::green);
+			if (pressing) {
+				p.drawRect(pressingRect.left_top.x, pressingRect.left_top.y, pressingRect.right_bottom.x - pressingRect.left_top.x, pressingRect.right_bottom.y - pressingRect.left_top.y);
+			}
+
+			p.setPen(Qt::red);
+			for (auto it = rectList.begin(); it != rectList.end(); it++) {
+				Rect rect = *it;
+				p.drawRect(rect.left_top.x, rect.left_top.y, rect.right_bottom.x - rect.left_top.x, rect.right_bottom.y - rect.left_top.y);
+			}
+		}
+
 		p.end();
 	}
 	else if (mode == 1) { // 3D view mode
@@ -63,7 +81,8 @@ void GLWidget::paintGL()
 		std::vector<Entity> entities = em->getAllEntity();
 		for (auto it = entities.begin(); it != entities.end(); it++) {
 			glLoadIdentity();
-			glTranslatef(it->pos.x, it->pos.y, it->pos.z);
+			float ratio = 1 / it->size;
+			glTranslatef(it->pos.x * ratio, it->pos.y * ratio, it->pos.z * ratio);
 			glColor3f(1, 0, 0);
 			glutSolidSphere(5, 20, 20);
 		}
@@ -82,26 +101,74 @@ void GLWidget::mousePressEvent(QMouseEvent* event)
 {
 	int x = event->x();
 	int y = event->y();
+
+	// Pressing event
+	if (!pressing) {
+		pressingRect.left_top = Point(x, y);
+		pressingRect.right_bottom = Point(x, y);
+	}
+	pressing = true;
+
+	update();
+}
+
+void GLWidget::mouseMoveEvent(QMouseEvent* event)
+{
+	int x = event->x();
+	int y = event->y();
+
+	if (pressing) {
+		pressingRect.right_bottom = Point(x, y);
+		update();
+	}
+}
+
+void GLWidget::mouseReleaseEvent(QMouseEvent* event)
+{
+	int x = event->x();
+	int y = event->y();
+	int center_x = x;
+	int center_y = y;
+
+	pressing = false;
+	// Save draw rect
+	pressingRect.right_bottom = Point(x, y);
+	rectList.push_back(pressingRect);
+
 	float width = 300;
 	float height = 200;
 
+	if (draw_mode == 1) {
+		center_x = (pressingRect.right_bottom.x + pressingRect.left_top.x) / 2;
+		center_y = (pressingRect.right_bottom.y + pressingRect.left_top.y) / 2;
+	}
+
 	// Calculate click position in 3D space
-	dx = x - width / 2;
-	dy = height / 2 - y;
+	dx = center_x - width / 2;
+	dy = height / 2 - center_y;
 	dz = -(height / 2) / tan(3.14 / 4 * 0.5);
 
-	QLabel* label = this->parentWidget()->findChild<QLabel*>("label");
-	label->setText(QString("X = %1 Y = %2").arg(x).arg(y));
+	float size = sqrt((pressingRect.right_bottom.x - pressingRect.left_top.x) * (pressingRect.right_bottom.y - pressingRect.left_top.y)) / 16;
 
 	pointList.push_back(Point(x, y));
 
-	em->addEntity(Entity(dx, dy, dz));
+	// Add entity
+	if (draw_mode == 0) {
+		em->addEntity(Entity(dx, dy, dz));
+	}
+	else if (draw_mode == 1) {
+		em->addEntity(Entity(dx, dy, dz, size));
+	}
+
+	QLabel* label = this->parentWidget()->findChild<QLabel*>("label");
+	label->setText(QString("X = %1 Y = %2 Size = %3").arg(x).arg(y).arg(size));
 
 	update();
 }
 
 void GLWidget::resetBtnClicked() {
 	pointList.clear();
+	rectList.clear();
 	em->clear();
 	update();
 }

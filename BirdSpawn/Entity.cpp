@@ -3,11 +3,13 @@
 Entity::Entity()
 {
 	pos = Vector3(0, 0, 0);
+	size = 1;
 }
 
-Entity::Entity(float a, float b, float c)
+Entity::Entity(float a, float b, float c, float s)
 {
 	pos = Vector3(a, b, c);
+	size = s;
 }
 
 

@@ -14,6 +14,16 @@ struct Point {
 	}
 };
 
+struct Rect {
+	Point left_top;
+	Point right_bottom;
+	Rect() {}
+	Rect(Point lt, Point rb) {
+		left_top = lt;
+		right_bottom = rb;
+	}
+};
+
 struct Vector3 {
 	float x;
 	float y;
@@ -29,10 +39,11 @@ class Entity
 {
 public:
 	Entity();
-	Entity(float a, float b, float c);
+	Entity(float a, float b, float c, float s = 1);
 	~Entity();
 
 	Vector3 pos;
+	float size;
 };
 
 class EntityManager
