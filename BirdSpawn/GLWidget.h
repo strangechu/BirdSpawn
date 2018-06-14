@@ -4,18 +4,8 @@
 
 #include <QOpenGLWidget.h>
 
-struct Point {
-	int x;
-	int y;
-	Point() {
-		x = 0;
-		y = 0;
-	}
-	Point(int a, int b) {
-		x = a;
-		y = b;
-	}
-};
+class Point;
+class EntityManager;
 
 class GLWidget : public QOpenGLWidget
 {
@@ -37,6 +27,8 @@ public:
 	QString fileName;
 
 	std::vector<Point> pointList;
+
+	EntityManager* em;
 
 private slots:
 	void resetBtnClicked();

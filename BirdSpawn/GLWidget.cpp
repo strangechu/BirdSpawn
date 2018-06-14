@@ -1,14 +1,16 @@
 #include "GLWidget.h"
+#include "Entity.h"
 #include <GL/glut.h>
 #include "QmouseEvent"
 #include "QLabel"
 #include "QPainter"
 #include "QColor"
 #include "QFileDialog"
-#include <math.h>
+#include <cmath>
 
 GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
+	em = EntityManager::getInstance();
 }
 
 
@@ -40,7 +42,7 @@ void GLWidget::paintGL()
 		p.setPen(Qt::red);
 		p.setBrush(Qt::red);
 		// draw click point
-		for (std::vector<Point>::iterator it = pointList.begin(); it != pointList.end(); it++) {
+		for (auto it = pointList.begin(); it != pointList.end(); it++) {
 			p.drawEllipse(it->x, it->y, 5, 5);
 		}
 		p.end();
@@ -57,18 +59,14 @@ void GLWidget::paintGL()
 		glLoadIdentity();
 		gluLookAt(0, 0, 0, 0, 0, -5, 0, 1, 0);
 
-		glLoadIdentity();
-		glTranslatef(70.0, 10.0, -300.0);
-		glColor3f(1, 0, 0);
-		glutSolidSphere(10, 20, 20);
-		glLoadIdentity();
-		glTranslatef(-10.0, 50.0, -300.0);
-		glColor3f(1, 0, 0);
-		glutSolidSphere(10, 20, 20);
-		glLoadIdentity();
-		glTranslatef(60.0, 60.0, -300.0);
-		glColor3f(1, 0, 0);
-		glutSolidSphere(10, 20, 20);
+		// Draw all entities
+		std::vector<Entity> entities = em->getAllEntity();
+		for (auto it = entities.begin(); it != entities.end(); it++) {
+			glLoadIdentity();
+			glTranslatef(it->pos.x, it->pos.y, it->pos.z);
+			glColor3f(1, 0, 0);
+			glutSolidSphere(5, 20, 20);
+		}
 	}
 }
 
@@ -87,6 +85,7 @@ void GLWidget::mousePressEvent(QMouseEvent* event)
 	float width = 300;
 	float height = 200;
 
+	// Calculate click position in 3D space
 	dx = x - width / 2;
 	dy = height / 2 - y;
 	dz = -(height / 2) / tan(3.14 / 4 * 0.5);
@@ -96,11 +95,14 @@ void GLWidget::mousePressEvent(QMouseEvent* event)
 
 	pointList.push_back(Point(x, y));
 
+	em->addEntity(Entity(dx, dy, dz));
+
 	update();
 }
 
 void GLWidget::resetBtnClicked() {
 	pointList.clear();
+	em->clear();
 	update();
 }
 
