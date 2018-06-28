@@ -11,6 +11,7 @@
 GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
 	em = EntityManager::getInstance();
+	setFocusPolicy(Qt::StrongFocus);
 }
 
 
@@ -29,10 +30,8 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL()
 {
-
-	QPainter p(this);
-
 	if (mode == 0) { // Paint mode
+		QPainter p(this);
 		QImage img(fileName);
 		p.begin(this);
 		// Draw image
@@ -75,7 +74,7 @@ void GLWidget::paintGL()
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		gluLookAt(0, 0, 0, 0, 0, -5, 0, 1, 0);
+		gluLookAt(0 + move_x, 0 + move_y, 0 + move_z, 0, 0, -5, 0, 1, 0);
 
 		// Draw all entities
 		std::vector<Entity> entities = em->getAllEntity();
@@ -163,6 +162,25 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 	QLabel* label = this->parentWidget()->findChild<QLabel*>("label");
 	label->setText(QString("X = %1 Y = %2 Size = %3").arg(x).arg(y).arg(size));
 
+	update();
+}
+
+void GLWidget::keyPressEvent(QKeyEvent* event)
+{
+	switch (event->key()) {
+	case Qt::Key_Up:
+		move_z += 10;
+		break;
+	case Qt::Key_Down:
+		move_z -= 10;
+		break;
+	case Qt::Key_Left:
+		move_x += 10;
+		break;
+	case Qt::Key_Right:
+		move_x -= 10;
+		break;
+	}
 	update();
 }
 

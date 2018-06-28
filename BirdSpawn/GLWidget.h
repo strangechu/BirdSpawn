@@ -19,8 +19,10 @@ public:
 	void GLWidget::mousePressEvent(QMouseEvent* event);
 	void GLWidget::mouseMoveEvent(QMouseEvent* event);
 	void GLWidget::mouseReleaseEvent(QMouseEvent* event);
+	void GLWidget::keyPressEvent(QKeyEvent* event);
 
-	float dx, dy, dz = 0.0f;
+	float dx = 0, dy = 0, dz = 0;
+	float move_x = 0, move_y = 0, move_z = 0;
 
 	int mode = 0;
 	int draw_mode = 1;
