@@ -1,17 +1,39 @@
 #include "GLWidget.h"
 #include "Entity.h"
 #include <GL/glut.h>
+#include <glm>
 #include "QmouseEvent"
 #include "QLabel"
 #include "QPainter"
 #include "QColor"
 #include "QFileDialog"
 #include <cmath>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
 	em = EntityManager::getInstance();
 	setFocusPolicy(Qt::StrongFocus);
+	
+	// Load obj file
+	std::ifstream fin;
+	fin.open("humbird.obj");
+	if (fin.is_open()) {
+		qDebug("Obj file loaded.");
+		std::string line;
+		while (!std::getline(fin, line).eof()) {
+			std::istringstream line_s(line);
+			std::string header;
+			line_s >> header;
+			if (std::strcmp("v", header.c_str()) == 0) {
+				float x, y, z;
+				line_s >> x >> y >> z;
+			}
+		}
+		fin.close();
+	}
 }
 
 
