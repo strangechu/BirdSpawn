@@ -34,6 +34,9 @@ public:
 	std::vector<Point> pointList;
 	std::vector<Rect> rectList;
 
+	std::vector<Vector3> vertices;
+	std::vector<unsigned int> vertexIndices, uvIndices;
+
 	EntityManager* em;
 
 private slots:

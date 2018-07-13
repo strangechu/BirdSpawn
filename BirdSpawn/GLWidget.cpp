@@ -1,12 +1,12 @@
 #include "GLWidget.h"
 #include "Entity.h"
 #include <GL/glut.h>
-#include <glm>
 #include "QmouseEvent"
 #include "QLabel"
 #include "QPainter"
 #include "QColor"
 #include "QFileDialog"
+#include "qopenglfunctions.h"
 #include <cmath>
 #include <iostream>
 #include <fstream>
@@ -23,13 +23,35 @@ GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent)
 	if (fin.is_open()) {
 		qDebug("Obj file loaded.");
 		std::string line;
+
 		while (!std::getline(fin, line).eof()) {
-			std::istringstream line_s(line);
+			std::istringstream lineStream(line);
 			std::string header;
-			line_s >> header;
+			lineStream >> header;
 			if (std::strcmp("v", header.c_str()) == 0) {
 				float x, y, z;
-				line_s >> x >> y >> z;
+				std::string str = line.substr(2);
+				std::sscanf(str.c_str(), "%f %f %f", &x, &y, &z);
+				vertices.push_back(Vector3(x, y, z));
+			}
+			else if (std::strcmp("vt", header.c_str()) == 0) {
+				float x, y, z;
+				std::string str = line.substr(3);
+				std::sscanf(str.c_str(), "%f %f %f", &x, &y, &z);
+			}
+			else if (std::strcmp("f", header.c_str()) == 0) {
+				std::string str = line.substr(2);
+				int vertexIndex[3], uvIndex[3];
+				std::sscanf(str.c_str(), "%d/%d %d/%d %d/%d", &vertexIndex[0], &uvIndex[0],
+					&vertexIndex[1], &uvIndex[1],
+					&vertexIndex[2], &uvIndex[2]
+					);
+				vertexIndices.push_back(vertexIndex[0]);
+				vertexIndices.push_back(vertexIndex[1]);
+				vertexIndices.push_back(vertexIndex[2]);
+				uvIndices.push_back(uvIndex[0]);
+				uvIndices.push_back(uvIndex[1]);
+				uvIndices.push_back(uvIndex[2]);
 			}
 		}
 		fin.close();
@@ -87,6 +109,7 @@ void GLWidget::paintGL()
 		p.end();
 	}
 	else if (mode == 1) { // 3D view mode
+		QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_LIGHT0);
 		glEnable(GL_LIGHTING);
@@ -107,6 +130,11 @@ void GLWidget::paintGL()
 			glColor3f(1, 0, 0);
 			glutSolidSphere(5, 20, 20);
 		}
+
+		glLoadIdentity();
+		QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
+		glTranslatef(0, 0, -10);
+		f->glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices.size()), &vertices[0], GL_STATIC_DRAW);
 	}
 }
 
